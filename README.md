@@ -15,6 +15,10 @@ cd nodepaynew
 **更新代理**
 ```bash
 wget https://raw.githubusercontent.com/monosans/proxy-list/main/proxies/all.txt && mv all.txt proxy.txt
+每个账户最多可以连接10个代理
+所以现在最好的耕种方式是手动创建多个账户
+该脚本支持多账户，只需np_tokens.txt为 1 个账户每行粘贴令牌即可
+确保你的帐户获得人类证明徽章
 ```
 ## 1. 获取所需信息
 
