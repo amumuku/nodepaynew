@@ -2,7 +2,7 @@
 ![Nodepay.ai](image.png)
 Nodepay.ai 机器人使用多个代理自动 ping
 
-注册 Nodepay.ai : [https://app.nodepay.ai/register](https://app.nodepay.ai/register?ref=Od15EPpf6UBd5qR)
+注册 Nodepay.ai : [https://app.nodepay.ai/register](https://app.nodepay.ai/register?ref=alOvt9MJJxpdRTK)
 
 # 功能
 此脚本旨在在服务器上使用多个代理运行。
