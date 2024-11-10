@@ -18,8 +18,8 @@ banner = """
                ╔╝╔╗╚╣╚═╝║╚══╣╚╩═║╔═╗║╚═╝║
                ╚═╝╚═╩═══╩═══╩═══╩╝─╚╩═══╝
                原作者：github.com/zlkcyber
-               汉化：推特雪糕战神@Hy78516012       
-                
+               汉化：推特雪糕战神@Hy78516012
+
 """
 
 # Initialize colorama and configure loguru
@@ -33,8 +33,8 @@ RETRIES = 120
 TOKEN_FILE = 'np_tokens.txt'
 SESSION_FILE = 'sessions.json'
 DOMAIN_API = {
-    "SESSION": "https://api.nodepay.org/api/auth/session?",
-    "PING": "https://nw.nodepay.org/api/network/ping"
+    "SESSION": "http://18.136.143.169/api/auth/session",
+    "PING": "http://54.255.192.166/api/network/ping"
 }
 
 CONNECTION_STATES = {
@@ -104,16 +104,18 @@ def load_tokens_from_file(filename):
 async def call_api(url, data, proxy, token, max_retries=3):
     headers = {
         "Authorization": f"Bearer {token}",
-        'accept': '*/*',
-        'content-type': 'application/json',
-        'user-agent': 'Mozilla/5.0',
+        "Content-Type": "application/json",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.212 Safari/537.36",
+        "Accept": "application/json",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Referer": "https://app.nodepay.ai",
     }
-    
+
     async with aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=True)) as session:
         try:
-            async with session.options(url, headers=headers, proxy=proxy, timeout=10) as options_response:
+            async with session.options(url, headers=headers, proxy=proxy, timeout=30) as options_response:
                 if options_response.status not in (200, 204):
-                    logger.warning(f"Request to {url} failed with status {options_response.status} with proxy {proxy}")
+                    logger.warning(f"Request to {url} failed with status {options_response.status} {options_response} with proxy {proxy}")
                     return None
                 else:
                     logger.debug(f"Request successful for {url} with proxy {proxy}")
@@ -147,9 +149,12 @@ async def render_profile_info(proxy, token):
             else:
                 browser_id = uuidv4()
                 response = await call_api(DOMAIN_API["SESSION"], {}, proxy, token)
+                logger.info(f"call return  {response}")
+
                 if response:
                     valid_resp(response)
                     account_info = response["data"]
+                    logger.info(f"account_info {account_info}")
                     if account_info.get("uid"):
                         proxy_auth_status[proxy] = True
                         save_session_info(proxy, account_info)
@@ -204,6 +209,7 @@ async def ping(proxy, token):
 def handle_ping_fail(proxy, response):
     global RETRIES, status_connect
     RETRIES += 1
+
     if response and response.get("code") == 403:
         handle_logout(proxy)
     elif RETRIES < 2:
